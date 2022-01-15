@@ -1,6 +1,10 @@
 from __future__ import annotations
+from email.policy import default
 from numbers import Integral
 import qrcode as qrcodegen
+from qrcode.image.styles.moduledrawers import *
+from qrcode.image.styles.colormasks import *
+from qrcode.image.styledpil import StyledPilImage
 import io
 import logging
 import voluptuous as vol
@@ -14,6 +18,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType,DiscoveryInfoType
 from homeassistant.helpers.reload import async_setup_reload_service
 ERROR_CORRECT_VALUES = {"ERROR_CORRECT_L": 1,"ERROR_CORRECT_M":0,"ERROR_CORRECT_Q":3,"ERROR_CORRECT_H":2}
+DRAWERS = {"square": SquareModuleDrawer() ,"gapped_square": GappedSquareModuleDrawer(),"circle":CircleModuleDrawer(),"rounded":RoundedModuleDrawer(),"vertical_bars":VerticalBarsDrawer(),"horizontal_graphs": HorizontalBarsDrawer()}
+COLOR_MASKS = {"solid" : SolidFillColorMask(),"radial" : RadialGradiantColorMask() ,"square":SquareGradiantColorMask(),"horizontal":HorizontalGradiantColorMask(),"vertical":VerticalGradiantColorMask()}
 _LOGGER = logging.getLogger(__name__)
 from . import DOMAIN,PLATFORMS
 
@@ -44,7 +50,12 @@ def color(value : Any) -> tuple(int):
         return tuple(map(lambda x : int(x),str(value).replace(" ","").split(",")))
     else :
         raise vol.Invalid("Color did not match '*\d{1,3} *, *\d{1,3} *, *\d{1,3} *'")
-
+def drawer(value : Any) -> str:
+    if(value in DRAWERS):
+        return value
+def colormask(value: Any) -> str:
+    if(value in COLOR_MASKS):
+        return value
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required("content") : cv.template,
     vol.Required(CONF_NAME): cv.string,
@@ -53,7 +64,12 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional("box_size",default =10) : boxSize,
     vol.Optional("border",default =4) : border,
     vol.Optional("fill_color",default = "0,0,0") : color,
-    vol.Optional("back_color",default = "255,255,255") : color
+    vol.Optional("left_color",default="0,0,0") : color,
+    vol.Optional("right_color",default="0,0,0"):color,
+    vol.Optional("back_color",default = "255,255,255") : color,
+    vol.Optional("edge_color",default = "255,255,255") : color,
+    vol.Optional("drawer",default=None) : drawer,
+    vol.Optional("color_mask",default= None) : colormask
 })
 
 async def async_setup_platform(
@@ -80,6 +96,13 @@ class QRCAM(Camera):
         self._border = config["border"]
         self._fill_color = config["fill_color"]
         self._back_color = config["back_color"]
+        self._edge_color = config["edge_color"]
+        self._right_color = config["right_color"]
+        self._left_color = config["left_color"]
+        self._drawer = config["drawer"]
+        self._color_mask = config["color_mask"]
+        self._drawer = SquareModuleDrawer() if self._drawer is None else DRAWERS[self._drawer]
+        self._color_mask = SolidFillColorMask() if self._color_mask is None else COLOR_MASKS[self._color_mask]
     @property
     def supported_features(self) -> int:
         return 0
@@ -88,6 +111,7 @@ class QRCAM(Camera):
     ) -> bytes | None:
         """Still Image"""
         try:
+
           cont =   self._content.async_render(parse_result=False)
           qr = qrcodegen.QRCode(
             version=self._version,
@@ -97,7 +121,14 @@ class QRCAM(Camera):
           )
           qr.add_data(cont)
           qr.make(fit=True)
-          img = qr.make_image(back_color=self._back_color,fill_color=self._fill_color)
+          img = qr.make_image(back_color=self._back_color,
+                              fill_color=self._fill_color,
+                              edge_color = self._edge_color,
+                              right_color = self._right_color,
+                              left_color = self._left_color,
+                              image_factory=StyledPilImage,
+                              module_drawer = self._drawer,
+                              color_mask = self._color_mask)
           img_byte_array = io.BytesIO()
           img.save(img_byte_array,format="PNG")
           return img_byte_array.getvalue()
