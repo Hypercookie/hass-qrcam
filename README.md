@@ -88,7 +88,7 @@ Name | Number in Image
 `vertical`| 5
  (WIP) | 6
 
-## Drawer
+## Rendering
 ![drawers](https://github.com/lincolnloop/python-qrcode/blob/master/doc/module_drawers.png)
 Name | Number in Image
 -- | --
