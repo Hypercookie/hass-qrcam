@@ -31,8 +31,4 @@ jobs:
           with:
             python-version: "3.x"
         - run: python3 -m pip install black
-<<<<<<< HEAD
         - run: black .
-=======
-        - run: black 
->>>>>>> 31ab6de28adcf9b34e26f57e3879abeb1d98be17
