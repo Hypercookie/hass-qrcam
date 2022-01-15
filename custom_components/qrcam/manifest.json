@@ -1,0 +1,16 @@
+{
+    "domain": "qrcam",
+    "name": "QR Cam",
+    "documentation": "https://github.com/Hypercookie/hass-qrcam",
+    "issue_tracker": "https://github.com/Hypercookie/hass-qrcam/issues",
+    "dependencies": [],
+    "codeowners": [
+        "@Hypercookie"
+    ],
+    "requirements": [
+        "qrcode==7.3.1"
+    ],
+    "iot_class": "calculated",
+    "version": "0.1.0",
+    "config_flow": false
+}
