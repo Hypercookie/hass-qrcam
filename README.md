@@ -97,7 +97,7 @@ Name | Number in Image
 `circle`| 3
 `rounded`| 4
 `vertical_bars`| 5
-`horizontal_graphs`| 6
+`horizontal_bars`| 6
 
 [commits]: https://github.com/Hypercookie/hass-qrcam/commits/master
 [hacs]: https://github.com/custom-components/hacs
