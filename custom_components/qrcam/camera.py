@@ -30,7 +30,7 @@ DRAWERS = {
     "circle": CircleModuleDrawer(),
     "rounded": RoundedModuleDrawer(),
     "vertical_bars": VerticalBarsDrawer(),
-    "horizontal_graphs": HorizontalBarsDrawer(),
+    "horizontal_bars": HorizontalBarsDrawer(),
 }
 COLOR_MASKS = {
     "solid": SolidFillColorMask(),
