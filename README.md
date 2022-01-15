@@ -76,7 +76,7 @@ ERROR_CORRECT_L | About 7% or less errors can be corrected.
 ERROR_CORRECT_M | About 15% or less errors can be corrected.
 ERROR_CORRECT_Q | About 25% or less errors can be corrected.
 ERROR_CORRECT_H | About 30% or less errors can be corrected.
-***
+
 ## Color Mask
 ![masks](https://github.com/lincolnloop/python-qrcode/blob/master/doc/color_masks.png)
 Name | Number in Image
@@ -98,6 +98,9 @@ Name | Number in Image
 `rounded`| 4
 `vertical_bars`| 5
 `horizontal_bars`| 6
+***
+***
+Most of this Project is based on the [qrcode module](https://github.com/lincolnloop/python-qrcode) for python
 
 [commits]: https://github.com/Hypercookie/hass-qrcam/commits/master
 [hacs]: https://github.com/custom-components/hacs
