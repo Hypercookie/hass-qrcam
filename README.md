@@ -86,7 +86,7 @@ Name | Number in Image
 `square`| 3
 `horizontal` | 4
 `vertical`| 5
- - (WIP) | 6
+ (WIP) | 6
 
 ## Drawer
 ![drawers](https://github.com/lincolnloop/python-qrcode/blob/master/doc/module_drawers.png)
@@ -98,7 +98,7 @@ Name | Number in Image
 `rounded`| 4
 `vertical_bars`| 5
 `horizontal_graphs`| 6
-Name |
+
 [commits]: https://github.com/Hypercookie/hass-qrcam/commits/master
 [hacs]: https://github.com/custom-components/hacs
 [hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
