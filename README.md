@@ -48,8 +48,6 @@ camera:
    content: "WIFI:S:{SSID};T:WPA;P:{PASSWORD};;"
 ```
 
-Note that you need a custom sensor for the shopping list example.
-
 Following is configurable:
 
 Name | Description |Required | Type | Default
