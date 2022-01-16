@@ -19,7 +19,9 @@ Platform | Description
 
 ### Using HACS (easy way)
 
-add `https://github.com/Hypercookie/hass-qrcam/` to your custom repositories <br>(open the hacs integration view -> three dots right upper corner -> custom repositories -> paste url and set category to `Integration`)
+add `https://github.com/Hypercookie/hass-qrcam/` to your custom repositories <br>(open the hacs integration view -> three dots right upper corner -> custom repositories -> paste url and set category to `Integration`) <br> 
+The QRCam integration should appear in your HACS Integration Store. 
+Click install.
 ### Manual
 
 Copy the `qrcam` folder  from the `custom_components` folder to the `custom_components` folder on your homeassistant instance.
