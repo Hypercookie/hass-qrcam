@@ -18,6 +18,13 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from homeassistant.helpers.reload import async_setup_reload_service
 
+COLOR_MASKS = {
+    "solid": SolidFillColorMask(),
+    "radial": RadialGradiantColorMask(),
+    "square": SquareGradiantColorMask(),
+    "horizontal": HorizontalGradiantColorMask(),
+    "vertical": VerticalGradiantColorMask(),
+}
 ERROR_CORRECT_VALUES = {
     "ERROR_CORRECT_L": 1,
     "ERROR_CORRECT_M": 0,
@@ -31,13 +38,6 @@ DRAWERS = {
     "rounded": RoundedModuleDrawer(),
     "vertical_bars": VerticalBarsDrawer(),
     "horizontal_bars": HorizontalBarsDrawer(),
-}
-COLOR_MASKS = {
-    "solid": SolidFillColorMask(),
-    "radial": RadialGradiantColorMask(),
-    "square": SquareGradiantColorMask(),
-    "horizontal": HorizontalGradiantColorMask(),
-    "vertical": VerticalGradiantColorMask(),
 }
 _LOGGER = logging.getLogger(__name__)
 from . import DOMAIN, PLATFORMS
@@ -134,20 +134,45 @@ class QRCAM(Camera):
         self._error_correction = config["error_correction"]
         self._box_size = config["box_size"]
         self._border = config["border"]
-        self._fill_color = config["fill_color"]
-        self._back_color = config["back_color"]
-        self._edge_color = config["edge_color"]
-        self._right_color = config["right_color"]
-        self._left_color = config["left_color"]
+        self._fill_color = tuple(config["fill_color"])
+        self._back_color = tuple(config["back_color"])
+        if tuple(self._back_color) == (0, 0, 0):
+            self._back_color = (0, 0, 1)
+        self._edge_color = tuple(config["edge_color"])
+        self._right_color = tuple(config["right_color"])
+        self._left_color = tuple(config["left_color"])
         self._drawer = config["drawer"]
         self._color_mask = config["color_mask"]
+        self.COLOR_MASKS = {
+            "solid": SolidFillColorMask(
+                back_color=self._back_color, front_color=self._fill_color
+            ),
+            "radial": RadialGradiantColorMask(),
+            "square": SquareGradiantColorMask(
+                back_color=self._back_color,
+                center_color=self._fill_color,
+                edge_color=self._edge_color,
+            ),
+            "horizontal": HorizontalGradiantColorMask(
+                back_color=self._back_color,
+                left_color=self._left_color,
+                right_color=self._right_color,
+            ),
+            "vertical": VerticalGradiantColorMask(
+                back_color=self._back_color,
+                top_color=self._left_color,
+                bottom_color=self._right_color,
+            ),
+        }
         self._drawer = (
             SquareModuleDrawer() if self._drawer is None else DRAWERS[self._drawer]
         )
         self._color_mask = (
-            SolidFillColorMask()
+            SolidFillColorMask(
+                back_color=self._back_color, front_color=self._fill_color
+            )
             if self._color_mask is None
-            else COLOR_MASKS[self._color_mask]
+            else self.COLOR_MASKS[self._color_mask]
         )
 
     @property
@@ -183,7 +208,7 @@ class QRCAM(Camera):
             img.save(img_byte_array, format="PNG")
             return img_byte_array.getvalue()
         except TemplateError as err:
-            _LOGGER.error("Error parsing template %s: %s", self._still_image_url, err)
+            _LOGGER.error("Error parsing template %s: %s", self._content, err)
             return None
 
     @property
