@@ -1,5 +1,5 @@
 # QRCam
-
+Deprecated. Use [this](https://github.com/DeerMaximum/QR-Code-Generator)<br><br><br>
 [![License][license-shield]](LICENSE)
 
 [![hacs][hacsbadge]][hacs]
